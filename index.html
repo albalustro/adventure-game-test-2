@@ -1,0 +1,250 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+<title>The Closed Door</title>
+<meta name='viewport' id='viewport' content='width=640;initial-scale=1.0;minimum-scale=1.0;maximum-scale=1.0;user-scalable=false;'>
+<meta name='GENERATOR' content='Adventure Maker version 4.7.1'>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+<!--[if lt IE 7.]>
+<script defer type="text/javascript" src="pngfix.js"></script>
+<![endif]-->
+<script>
+var v00001 = 0;
+var v00002 = 0;
+var v00003 = 0;
+var v00004 = 0;
+var v00005 = 0;
+var v00006 = 0;
+var v00007 = 0;
+var iFrm = '00028.htm';
+var loadingFrameSet = true;
+var currentIFrameIndex = 1;
+var nextFrameLoading = false;
+//var cursorW = 64;
+//var cursorH = 64;
+var loadingDelay = 1500;
+var posX = 0;
+var posY = 0;
+//var currentHotspot;
+//var currentHotspotIndex = 0;
+var messageTimeoutID = 0;
+//var showNextFrameTimeoutID = 0;
+var frameTimerTimeoutID = 0;
+var lastTimeoutID = setTimeout("", 50);
+var firstFrameInitialized = false;
+var currentWidth = 0;
+
+function startup(){
+		loadingFrameSet = false;
+		//if (navigator.userAgent.indexOf('iPhone') != -1) {
+		setInterval("checkForScreenSizeChange()", 400); // Should be "lastTimeoutID = " but there is the line after
+		lastTimeoutID = setTimeout("hideAddressBar()", 100);
+		//}
+		openFrame(iFrm, 0);
+}
+function hideAddressBar(){
+		window.scrollTo(0, 1);
+}
+function checkForScreenSizeChange()
+{
+    if (window.innerWidth != currentWidth)
+    {
+        currentWidth = window.innerWidth;
+        lastTimeoutID = setTimeout("hideAddressBar()", 100);          
+    }
+}
+function getCurrentIFrameRef(){
+		//return document.getElementById("iFrame" + currentIFrameIndex);
+		return window.frames["iFrame" + currentIFrameIndex];
+}
+function getVariable(variableName){
+		return eval(variableName);
+}
+function setVariable(variableName,variableValue){
+        eval(variableName + "=" + variableValue);
+}
+function hotspotClass(hyperlink,mousePointerSrc,restartAnimation,variablesToChangeTo0,variablesToChangeTo1,variablesToInvert,variablesMustBe0,variablesMustBe1,textToDisplay) {
+        this.hyperlink = hyperlink;
+        this.mousePointer = new Image();
+        if (mousePointerSrc != ""){this.mousePointer.src = mousePointerSrc;};
+        this.restartAnimation = restartAnimation;
+        this.variablesToChangeTo0 = (variablesToChangeTo0 == null) ? new Array : variablesToChangeTo0;
+        this.variablesToChangeTo1 = (variablesToChangeTo1 == null) ? new Array : variablesToChangeTo1;
+        this.variablesToInvert = (variablesToInvert == null) ? new Array : variablesToInvert;
+        this.variablesMustBe0 = (variablesMustBe0 == null) ? new Array : variablesMustBe0;
+        this.variablesMustBe1 = (variablesMustBe1 == null) ? new Array : variablesMustBe1;
+        this.textToDisplay = textToDisplay;
+}
+function doHotspotClick(hotspotIndex){
+		hideAddressBar();
+		if (nextFrameLoading == false){
+			var hotspotItemRef=getCurrentIFrameRef().hotspot[hotspotIndex];
+			for(var i=0;i<hotspotItemRef.variablesToChangeTo0.length;i++){
+				setVariable(hotspotItemRef.variablesToChangeTo0[i],0);
+			}
+			for(var i=0;i<hotspotItemRef.variablesToChangeTo1.length;i++){
+				setVariable(hotspotItemRef.variablesToChangeTo1[i],1);
+			}
+			for(var i=0;i<hotspotItemRef.variablesToInvert.length;i++){
+				setVariable(hotspotItemRef.variablesToInvert[i],1-getVariable(hotspotItemRef.variablesToInvert[i]));
+			}
+			if (hotspotItemRef.hyperlink != ""){
+				openFrame(hotspotItemRef.hyperlink, 0);
+			} else {
+				updateHotspotsVisibility();
+			}
+			if (hotspotItemRef.textToDisplay != ""){
+					displayMessage(hotspotItemRef.textToDisplay);
+			}
+		}
+}
+function openFrame(sFrameName, timeoutID){
+        if (nextFrameLoading == false && (timeoutID == 0 || timeoutID == frameTimerTimeoutID)){
+			nextFrameLoading = true;
+			if (firstFrameInitialized == true) {
+				//getCurrentIFrameRef().document.getElementById("cursor").style.visibility = "hidden";
+				getCurrentIFrameRef().document.getElementById("hourglass").style.visibility = "visible";
+			}
+			
+			// RESET TIMERS:
+			clearTimeout(messageTimeoutID);
+			clearTimeout(frameTimerTimeoutID);
+			
+			currentIFrameIndex = 1 - currentIFrameIndex;
+			getCurrentIFrameRef().location.replace(sFrameName);
+			
+			//We now wait for the frame images to load, and fire the ShowNewFrame() method when they are all loaded.
+			
+			//lastTimeoutID = setTimeout("showNextFrame('" + (lastTimeoutID + 1) + "');", loadingDelay);
+			//showNextFrameTimeoutID = lastTimeoutID;
+		}
+}
+//function showNextFrame(timeoutID){
+function showNextFrame(){
+		//if (timeoutID == 0 || timeoutID == showNextFrameTimeoutID){
+			//document.getElementById("iFrame" + currentIFrameIndex).style.visibility = "visible";
+			document.getElementById("iFrame" + currentIFrameIndex).style.width = 640;
+			document.getElementById("iFrame" + currentIFrameIndex).style.height = 480;
+			//document.getElementById("iFrame" + (1 - currentIFrameIndex)).style.visibility = "hidden";
+			document.getElementById("iFrame" + (1 - currentIFrameIndex)).style.width = 0;
+			document.getElementById("iFrame" + (1 - currentIFrameIndex)).style.height = 0;
+			getCurrentIFrameRef().document.getElementById("hourglass").style.visibility = "hidden";
+			//scroll(0,0);
+			nextFrameLoading = false;
+		//}
+}
+function addFrameTimer(sDestinationFrame, timerDuration){
+		lastTimeoutID = setTimeout("openFrame('" + sDestinationFrame + "', " + (lastTimeoutID + 1) + ");", timerDuration);
+		frameTimerTimeoutID = lastTimeoutID;
+}
+function displayMessage(messageText){
+        var messageRef = getCurrentIFrameRef().document.getElementById("message");
+        var textbackgroundRef = getCurrentIFrameRef().document.getElementById("textBackground");
+        messageRef.style.visibility = "hidden";
+        messageRef.innerHTML = unescape(messageText);
+        textbackgroundRef.style.visibility = "visible";
+        messageRef.style.visibility = "visible";
+        lastTimeoutID = setTimeout("removeMessage(" + (lastTimeoutID + 1) + ");", 3000);
+        messageTimeoutID = lastTimeoutID;       
+}
+function removeMessage(timeoutID){
+	if (timeoutID == 0 || timeoutID == messageTimeoutID){
+		var messageRef = getCurrentIFrameRef().document.getElementById("message");
+		var textbackgroundRef = getCurrentIFrameRef().document.getElementById("textBackground");
+		messageRef.style.visibility = "hidden";
+		textbackgroundRef.style.visibility = "hidden";
+	}
+}
+function initializeFrame(){
+		if (loadingFrameSet == false) { // Prevents bugs when user clicks "Reload"
+			updateHotspotsVisibility();
+			if (firstFrameInitialized == true) {
+					getCurrentIFrameRef().document.getElementById("message").style.visibility = "hidden";
+			} else {
+					firstFrameInitialized = true;
+					var sStr = "%50%6F%77%65%72%65%64%20%62%79%20%41%64%76%65%6E%74%75%72%65%20%4D%61%6B%65%72%";
+					sStr = sStr + "20%28%77%77%77%2E%61%64%76%65%6E%74%75%72%65%6D%61%6B%65%72%2E%63%6F%6D%29";
+					displayMessage(sStr);
+			}
+		}
+}
+function shouldHotspotBeVisible(hotspotItemRef){
+        for(var i=0;i<hotspotItemRef.variablesMustBe0.length;i++){
+                if (getVariable(hotspotItemRef.variablesMustBe0[i]) != 0) {return false;}
+        }
+        for(var i=0;i<hotspotItemRef.variablesMustBe1.length;i++){
+                if (getVariable(hotspotItemRef.variablesMustBe1[i]) != 1) {return false;}
+        }
+        return true;
+}
+function updateHotspotsVisibility(){
+        var hotspotRef;
+        var newVisibility;
+        for(var i=1;i<=getCurrentIFrameRef().hotspotsCount;i++){
+                hotspotRef = getCurrentIFrameRef().document.getElementById("hotspot" + i);
+                newVisibility = shouldHotspotBeVisible(getCurrentIFrameRef().hotspot[i]) ? "visible" : "hidden";
+                if (hotspotRef.style.visibility != newVisibility) {
+					//if (getCurrentIFrameRef().hotspot[i].restartAnimation != "") {
+					//	if (newVisibility == "visible") {
+					//		restartHotspotAnimation(i);
+					//		getCurrentIFrameRef().document.getElementById("hotspotImg" + i).src = getCurrentIFrameRef().hotspot[i].restartAnimation;
+					//	}
+					//}
+                    hotspotRef.style.visibility = newVisibility;
+                    //getCurrentIFrameRef().document.getElementById("cursor").style.visibility = "hidden";
+                }
+        }
+}
+//function restartHotspotAnimation(hotspotIndex){
+//		var hotspotRef = getCurrentIFrameRef().document.getElementById("hotspot" + hotspotIndex);
+//		var oldPosition = hotspotRef.style.top;
+//		hotspotRef.style.top = 1000;
+//		getCurrentIFrameRef().scroll(1,0);
+//		getCurrentIFrameRef().scroll(0,0);
+//		hotspotRef.style.top = oldPosition;
+//}
+//function backgroundInHandler(hotspotIndex,hotspotRef){
+//        if (nextFrameLoading == false){
+//			if (hotspotIndex != currentHotspotIndex){
+//				getCurrentIFrameRef().document.getElementById("cursor").style.visibility = "hidden";
+//			}
+//			currentHotspot = hotspotRef;
+//			currentHotspotIndex = hotspotIndex;
+//		}
+//}
+//function hotspotInHandler(hotspotIndex,hotspotRef){
+//        if (nextFrameLoading == false){
+//			if (hotspotIndex != currentHotspotIndex){
+//				if (getCurrentIFrameRef().hotspot[hotspotIndex].mousePointer.src != "") {
+//						getCurrentIFrameRef().document.getElementById("cImage").src = getCurrentIFrameRef().hotspot[hotspotIndex].mousePointer.src;
+//						tempLeft = parseInt(hotspotRef.style.left) + Math.floor(parseInt(hotspotRef.style.width) / 2) - Math.floor(cursorW / 2);
+//						tempTop = parseInt(hotspotRef.style.top) + Math.floor(parseInt(hotspotRef.style.height) / 2) - Math.floor(cursorH / 2);
+//						getCurrentIFrameRef().document.getElementById("cursor").style.left = tempLeft;
+//						getCurrentIFrameRef().document.getElementById("cursor").style.top = tempTop
+//						getCurrentIFrameRef().document.getElementById("cursor").style.visibility = "visible";
+//				} else {
+//						getCurrentIFrameRef().document.getElementById("cursor").style.visibility = "hidden";
+//				}
+//			}
+//			currentHotspot = hotspotRef;
+//			currentHotspotIndex = hotspotIndex;
+//		}
+//}
+//function cursorMoveHandler(e){
+//
+//		if (nextFrameLoading == false){
+//			if (!((posX > parseInt(currentHotspot.style.left)) && (posX < (parseInt(currentHotspot.style.left) + parseInt(currentHotspot.style.width))) && (posY > parseInt(currentHotspot.style.top)) && (posY < (parseInt(currentHotspot.style.top) + parseInt(currentHotspot.style.height)))))
+//			{
+//					getCurrentIFrameRef().document.getElementById("cursor").style.visibility = "hidden";
+//			}
+//		}
+//		
+//}
+
+</script>
+</head>
+<body bgcolor='rgb(0,0,0)' onload='startup();' >
+<iframe id="iFrame0" name="iFrame0" src="" scrolling="no" width="640" height="480" frameborder="0" style="position: absolute; left: 0px; top: 0px; visibility: visible;"></iframe>
+<iframe id="iFrame1" name="iFrame1" src="" scrolling="no" width="640" height="480" frameborder="0" style="position: absolute; left: 0px; top: 0px; visibility: visible;"></iframe>
+</body>
+</html>
+
